@@ -1,14 +1,18 @@
 # New Post & ModQueue alert
 This script will monitor a list of subreddits for new posts and items in the modqueue. It can then send a message to a slack or discord channel or a telegram user and a private message to a list of users on reddit. 
 
-You just need praw, so run:
+# Setup
+You then need to configure copy the `config.json.template` file to `config.json` and update it with the api keys and settings you want. 
 
-    pip install -r requirements.txt
+With docker:
+> `docker-compose up -d`
 
-To install the dependencies. You then need to configure copy the `config.json.template` file to `config.json` and update it with the api keys and settings you want. 
+Without docker:
+> `pip install -r requirements.txt` \
+`python ./newpost.py`
 
 ### Reddit 
-Create your bot / mod account and go to: https://www.reddit.com/prefs/apps/. Create an app and it will give you the credentials you need. 
+Create your bot / mod account and go to: https://www.reddit.com/prefs/apps/. Create a script app and it will give you the credentials you need. 
 
 ### Slack
 Create a slack app and get a webhook for the channel you would like to post to: https://api.slack.com/incoming-webhooks#getting-started. 
