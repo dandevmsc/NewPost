@@ -1,0 +1,7 @@
+version: "3"
+services:
+    reddit_post_checker:
+      command: watchmedo auto-restart --patterns="*.py;*.json" --recursive python ./newpost.py
+      build: .
+      volumes:
+        - .:/src
