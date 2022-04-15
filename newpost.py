@@ -3,7 +3,9 @@ import praw
 import time
 import requests
 import json
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 CONFIG_FILE='config.json'
 
 def handle_post(submission):
@@ -24,28 +26,18 @@ def handle_modqueue(item):
 
 def notify(subreddit, title, url):
     if first: return
-    if config['discord']['enabled']:
-        notify_discord(subreddit, title, url)
     if config['slack']['enabled']:
         notify_slack(subreddit, title, url)
     if config['reddit_pm']['enabled']:
         notify_reddit(subreddit, title, url)
-    if config['telegram']['enabled']:
-        notify_telegram(subreddit, title, url)
     if config['debug']:
         print(subreddit + ' | ' + title + ' | ' +  url)
-
-def notify_discord(subreddit, title, url):
-    message = title + " | <" + url + ">"
-    payload = { 'content': message }
-    headers = { 'Content-Type': 'application/json', }
-    requests.post(config['discord']['webhook'], data=json.dumps(payload), headers=headers)
 
 def notify_slack(subreddit, title, url):
     message = title + " | " + url
     payload = { 'text': message }
     headers = { 'Content-Type': 'application/json', }
-    requests.post(config['slack']['webhook'], data=json.dumps(payload), headers=headers)
+    requests.post(os.environ.get("webhook"), data=json.dumps(payload), headers=headers)
 
 def notify_reddit(subreddit, title, url):
     if title == 'Modqueue':
@@ -57,16 +49,6 @@ def notify_reddit(subreddit, title, url):
 
     for user in config['reddit_pm']['users']:
         r.redditor(user).message(subject, message)
-
-def notify_telegram(subreddit, title, url):
-    message = '<b>[/r/{}]</b> {} - {}'.format(subreddit, title, url)
-    payload = {
-        'chat_id': config['telegram']['chat_id'],
-        'text': message,
-        'parse_mode': 'HTML'
-    }
-    requests.post("https://api.telegram.org/bot{}/sendMessage".format(config['telegram']['token']),
-                  data=payload)
 
 def start_streams():
     modqueue_stream = (r.subreddit('mod').mod.stream.modqueue(pause_after=-1)
@@ -80,12 +62,11 @@ with open(CONFIG_FILE) as config_file:
 
 r = praw.Reddit(
     user_agent = config['reddit']['user_agent'],
-    client_id = config['reddit']['client_id'],
-    client_secret = config['reddit']['client_secret'],
-    username = config['reddit']['username'],
-    password = config['reddit']['password']
+    client_id = os.environ.get("client_id"),
+    client_secret = os.environ.get("client_secret"),
+    username = os.environ.get("username_1"),
+    password = os.environ.get("password")
 )
-
 first = True
 subreddits = '+'.join(config['subreddits'])
 (modqueue_stream, submission_stream) = start_streams()

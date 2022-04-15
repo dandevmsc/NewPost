@@ -1,0 +1,42 @@
+{ 
+  "reddit": {
+    "user_agent":"Mozilla/5.0"
+  },
+  "slack": {
+    "enabled": true
+  },
+  "reddit_pm": {
+    "users": [ "" ],
+    "enabled": false
+  },
+  "discord": {
+    "webhook": "",
+    "enabled": false
+  },
+  "telegram": {
+    "token": "",
+    "chat_id": "",
+    "enabled": false
+  },
+  "keywords": {
+    "list": [
+      "Optiver",
+      "Flow traders",
+      "Jane street",
+      "Peak6",
+      "Akuna",
+      "Two Sigma",
+      "Quant",
+      "Hudson river",
+      "DRW",
+      "Citadel",
+      "Virtu",
+      "Jump trading"
+    ],
+    "enabled": true
+  },
+  "debug": true,
+  "modqueue": true,
+  "new_posts": true,
+  "subreddits": [ "FinancialCareers" ]
+}
