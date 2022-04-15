@@ -15,6 +15,7 @@ def handle_post(submission):
 
     if config['keywords']['enabled']:
         if any(x.lower() in title.lower() for x in config['keywords']['list']):
+            print(title)
             notify(sub, title, url)
     else:
         notify(sub, title, url)
