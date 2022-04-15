@@ -6,7 +6,7 @@ import json
 import os
 from dotenv import load_dotenv
 load_dotenv()
-CONFIG_FILE='config.json'
+CONFIG_FILE='./config.json'
 
 def handle_post(submission):
     url = submission.shortlink
