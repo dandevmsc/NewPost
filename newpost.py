@@ -27,6 +27,7 @@ def handle_modqueue(item):
 
 def notify(subreddit, title, url):
     if first: return
+    print("print config slack",config['slack']['enabled'])
     if config['slack']['enabled']:
         notify_slack(subreddit, title, url)
     if config['reddit_pm']['enabled']:
@@ -38,6 +39,7 @@ def notify_slack(subreddit, title, url):
     message = title + " | " + url
     payload = { 'text': message }
     headers = { 'Content-Type': 'application/json', }
+    print(os.environ.get("webhook"),payload,config['keywords']['list'])
     requests.post(os.environ.get("webhook"), data=json.dumps(payload), headers=headers)
 
 def notify_reddit(subreddit, title, url):
@@ -71,12 +73,14 @@ r = praw.Reddit(
 first = True
 subreddits = '+'.join(config['subreddits'])
 (modqueue_stream, submission_stream) = start_streams()
-
+requests.post(os.environ.get("webhook"), data=json.dumps({ 'text':"starting script"}))
 while True:
     try:
         for item in modqueue_stream:
+            
             if item is None:
                 break
+            print(modqueue_stream.item)
             handle_modqueue(item)
 
         for submission in submission_stream:
@@ -87,9 +91,12 @@ while True:
         first = False
         time.sleep(1)
     except KeyboardInterrupt:
+        requests.post(os.environ.get("webhook"), data=json.dumps("keyboard"), )
+        
         print('\n')
         sys.exit(0)
     except Exception as e:
+        requests.post(os.environ.get("webhook"), data=json.dumps(e), )
         print('Error:', e)
         time.sleep(30)
         (modqueue_stream, submission_stream) = start_streams()
